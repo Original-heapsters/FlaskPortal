@@ -14,7 +14,7 @@ Test Coverage: ![codecov.io](https://codecov.io/github/Original-heapsters/FlaskP
 
 Project Throughput:[![Throughput Graph](https://graphs.waffle.io/Original-heapsters/FlaskPortal/throughput.svg)](https://waffle.io/Original-heapsters/FlaskPortal/metrics/throughput)
 
-[Issues](https://github.com/Original_heapsters/FlaskPortal/issues) | [Milestones](https://github.com/Original_heapsters/FlaskPortal/milestones) | [Metrics](https://github.com/Original_heapsters/FlaskPortal/graphs/contributors)
+[Issues](https://github.com/Original-heapsters/FlaskPortal/issues) | [Milestones](https://github.com/Original-heapsters/FlaskPortal/milestones) | [Metrics](https://github.com/Original-heapsters/FlaskPortal/graphs/contributors)
 ___
 
 ## About

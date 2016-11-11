@@ -48,4 +48,15 @@ def test_login_logout(client):
                flask_portal.app.config['PASSWORD'] + 'x')
     assert b'Invalid password' in rv.data
 
+def test_add_app(client):
+    login(client, flask_portal.app.config['USERNAME'],
+               flask_portal.app.config['PASSWORD'])
+    rv = client.post('/add', data=dict(
+        title='<Hello>',
+        link='http://google.com/'
+    ), follow_redirects=True)
+
+    assert b'No apps here so far' not in rv.data
+    assert b'&lt;Hello&gt;' in rv.data
+    assert b'http://google.com/' in rv.data
 

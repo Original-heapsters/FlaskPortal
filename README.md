@@ -18,16 +18,14 @@ Project Throughput:[![Throughput Graph](https://graphs.waffle.io/Original-heapst
 ___
 
 ## About
-General info about the FlaskPortal
-* What does it do?
-* Who is the target audience
-* what cloud aspects are there?
+___
+The Flask portal acts as a hub for various experimental applications based around the flask framework. This repository will act as the main portal and the idea is to create repositories anywhere and map them based on their url. Given this information, the main portal will fetch the latest version of any app hosted publicly and host that app within this repo's flask server instance. 
 
 ## Development Environment
 ___
 What tools we use
 * Python 3.5.2
-* PyCharm
+* PyCharm 2016.2.3
 * Flask
 * PyTest
 * Git
@@ -35,10 +33,10 @@ What tools we use
 * Waffle.io
 * Hipchat
 * Travis CI
+* CodeCov
 
 ## Contributing
 ___
-
 How to contribute to the project
 
 1. Clone repo into local machine
@@ -70,8 +68,14 @@ How to contribute to the project
     * Either replace the pull requests title with ***Fixes #issue_number*** or put ***Fixes #issue_number*** in the body of the pull request
     * Leave a comment using the @mention for another team memeber to review the code
 
+## Merging into master
+___
+Merge conflicts required check: No conflicts can be present prior to merging into master
+Updated branch required check: The proposed pull request needs to be up to date with the master branch prior to merging
+Build status required check: Travis CI will report back whether or not the unit tests completed successfully in order to merge into master
+Code Coverage Required check: CodeCov will run after the Travis CI test to report the code coverage of the test suite
+
+
 ## Integration
 ___
-Our integration strategy
-
-The master branch is protected based on the build results from Travis CI, this way we are guaranteed a working build on the master branch. We are implementing the feature branch workflow. A developer will checkout a branch and label it in accordance with the task they plan to achieve. After they have made their changes and commited them to their checked out branch they will initiate an automated build through travis-ci.org; this is done by pushing to their checked out branch. Upon a successful build, they will initiate a pull request which will be reviewed and tested before being merged with the master branch.
+Development will follow a feature branch strategy. Any new development must start with a new branch and, when ready, a pull request must be opened to initiate all CI operations that aide in verifying integrity of changes.

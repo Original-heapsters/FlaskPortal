@@ -31,8 +31,7 @@ def logout(client):
 def test_empty_db(client):
     """Start with a blank database."""
     rv = client.get('/')
-    print("SWAG" + str(rv.data))
-    assert b'No entries here so far' in rv.data
+    assert b'No apps here so far' in rv.data
 
 
 def test_login_logout(client):

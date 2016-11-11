@@ -51,24 +51,23 @@ def close_db(error):
 
 
 @app.route('/')
-def show_entries():
+def show_apps():
     db = get_db()
-    cur = db.execute('select title, text from entries order by id desc')
-    entries = cur.fetchall()
+    cur = db.execute('select title, link from apps order by id desc')
+    apps = cur.fetchall()
 
-    return render_template('show_entries.html', entries=entries)
-
+    return render_template('show_apps.html', apps=apps)
 
 @app.route('/add', methods=['POST'])
-def add_entry():
+def add_app():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, text) values (?, ?)',
-               [request.form['title'], request.form['text']])
+    db.execute('insert into apps (title, link) values (?, ?)',
+               [request.form['title'], request.form['link']])
     db.commit()
-    flash('New entry was successfully posted')
-    return redirect(url_for('show_entries'))
+    flash('New app was successfully posted')
+    return redirect(url_for('show_apps'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -82,7 +81,7 @@ def login():
         else:
             session['logged_in'] = True
             flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            return redirect(url_for('show_apps'))
     return render_template('login.html', error=error)
 
 
@@ -90,7 +89,7 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('show_apps'))
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=4000)

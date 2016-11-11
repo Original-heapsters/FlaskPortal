@@ -1,6 +1,6 @@
-drop table if exists entries;
-create table entries (
+drop table if exists apps;
+create table apps (
   id integer primary key autoincrement,
   title text not null,
-  'text' text not null
+  link text not null
 );

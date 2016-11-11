@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <form action="{{ url_for('add_app') }}" method="post" class="add-app">
+      <dl>
+        <dt>Title:
+        <dd><input type="text" size="30" name="title">
+        <dt>link:
+        <dd><textarea name="link" rows="5" cols="40"></textarea>
+        <dd><input type="submit" value="Share">
+      </dl>
+    </form>
+  {% endif %}
+  <ul class="apps">
+  {% for app in apps %}
+    <li><h2>{{ app.title }}</h2>{{ app.link|safe }}</li>
+  {% else %}
+    <li><em>Unbelievable.  No apps here so far</em></li>
+  {% endfor %}
+  </ul>
+{% endblock %}

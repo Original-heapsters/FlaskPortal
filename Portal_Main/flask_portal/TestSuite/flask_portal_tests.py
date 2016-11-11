@@ -1,7 +1,7 @@
 import os
 import tempfile
 import pytest
-from flask_portal import flask_portal
+from .. import flask_portal
 
 @pytest.fixture
 def client(request):

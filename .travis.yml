@@ -5,4 +5,4 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 # command to run tests
-script: python -m pytest FlaskPortal\\Portal_Main\\flask_portal\\TestSuite\\flask_portal_tests.py
+script: python -m pytest

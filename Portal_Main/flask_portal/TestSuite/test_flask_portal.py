@@ -60,3 +60,10 @@ def test_add_app(client):
     assert b'&lt;Hello&gt;' in rv.data
     assert b'http://google.com/' in rv.data
 
+def test_add_app_unauth(client):
+    rv = client.post('/add', data=dict(
+        title='<Hello>',
+        link='http://google.com/'
+    ), follow_redirects=True)
+
+    assert b'401 Unauthorized' in rv.data

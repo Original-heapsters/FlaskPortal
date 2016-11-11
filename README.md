@@ -5,7 +5,7 @@ Pycharm - 2016.2.3
 
 Test Coverage:[![codecov](https://codecov.io/gh/Original-heapsters/FlaskPortal/branch/master/graph/badge.svg)](https://codecov.io/gh/Original-heapsters/FlaskPortal)
 Continuous Integration:![Build status](https://travis-ci.org/Original-heapsters/FlaskPortal.svg?branch=master)
-Stories to be claimed: [![Stories in Ready](https://badge.waffle.io/Original_heapsters/FlaskPortal.png?label=ready&title=Ready)](https://waffle.io/Original_heapsters/FlaskPortal)
+Stories to be claimed: [![Stories in Ready](https://badge.waffle.io/Original-heapsters/FlaskPortal.png?label=ready&title=Ready)](https://waffle.io/Original-heapsters/FlaskPortal)
 Repo Hits:[![ghit.me](https://ghit.me/badge.svg?repo=Original_heapsters/FlaskPortal)](https://ghit.me/repo/Original_heapsters/FlaskPortal)
 
 #### [Build History](https://travis-ci.org/Original_heapsters/FlaskPortal/builds)

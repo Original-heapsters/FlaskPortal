@@ -10,6 +10,10 @@ def client(request):
     client = flask_portal.app.test_client()
     with flask_portal.app.app_context():
         flask_portal.init_db()
+        client.post("/register_new", data=dict(
+            username= flask_portal.app.config['USERNAME'],
+            password= flask_portal.app.config['PASSWORD']
+        ), follow_redirects=True)
 
     def teardown():
         os.close(db_fd)
@@ -42,10 +46,10 @@ def test_login_logout(client):
     rv = logout(client)
     assert b'You were logged out' in rv.data
     rv = login(client, flask_portal.app.config['USERNAME'] + 'x',
-               flask_portal.app.config['PASSWORD'])
+                flask_portal.app.config['PASSWORD'])
     assert b'Invalid username' in rv.data
     rv = login(client, flask_portal.app.config['USERNAME'],
-               flask_portal.app.config['PASSWORD'] + 'x')
+                flask_portal.app.config['PASSWORD'] + 'x')
     assert b'Invalid password' in rv.data
 
 def test_add_app(client):
@@ -67,3 +71,15 @@ def test_add_app_unauth(client):
     ), follow_redirects=True)
 
     assert b'401 Unauthorized' in rv.data
+
+def test_register_get(client):
+    rv = client.get("/register_new")
+    assert b'Register a new account!' in rv.data
+
+def test_register_user(client):
+    rv = client.post("/register_new",data=dict(
+        username='new_test_user',
+        password='new_test_password'
+    ), follow_redirects=True)
+
+    assert b'New user was successfully added' in rv.data

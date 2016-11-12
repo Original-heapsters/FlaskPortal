@@ -121,5 +121,5 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('show_apps'))
 
-#if __name__ == "__main__":
-#   app.run(debug=True, host='0.0.0.0', port=4000)
+if __name__ == "__main__":
+   app.run(debug=True, host='0.0.0.0', port=4000)

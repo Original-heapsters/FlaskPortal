@@ -1,5 +1,6 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
 app = Flask(__name__)
@@ -75,29 +76,40 @@ def add_app():
 def login():
     error = None
     if request.method == 'POST':
-        get_credentials(request.form['username'],request.form['password'])
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
-        else:
+        if get_credentials(request.form['username'],request.form['password']):
             session['logged_in'] = True
             flash('You were logged in')
             return redirect(url_for('show_apps'))
+        else:
+            error = "Invalid login"
     return render_template('login.html', error=error)
+
+@app.route('/register_new', methods=['GET', 'POST'])
+def register_new():
+    error = None
+    if request.method == 'POST':
+        add_user(request.form['username'] , request.form['password'] )
+        return redirect(url_for('login'))
+    return render_template('register_account.html', error=error)
 
 def get_credentials(uName, uPassword):
     db = get_db()
-    creds = db.execute('select username,password from users where username=? and password=?',[uName, uPassword])
+    creds = db.execute('select username,password from users where username=?',[uName])
 
     found_user = creds.fetchone()
 
-    if found_user:
-        print("I found " +  found_user["username"])
+    if found_user and check_password_hash(found_user["password"], uPassword):
         return found_user
     else:
         return None
 
+def add_user(uName, uPassword):
+    db = get_db()
+    pwHash = generate_password_hash(uPassword)
+    db.execute('insert into users (username, password) values (?, ?)',
+               [request.form['username'], pwHash])
+    db.commit()
+    flash('New user was successfully added')
 
 
 

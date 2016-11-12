@@ -11,8 +11,8 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flask_portal.db'),
     DEBUG=True,
     SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='admin'
+    USERNAME='test_user',
+    PASSWORD='test_password'
 ))
 
 app.config.from_envvar('FLASK_PORTAL_SETTINGS', silent=True)
@@ -99,17 +99,17 @@ def get_credentials(uName, uPassword):
         if bcrypt.check_password_hash(found_user["password"], uPassword) is True:
             return found_user, None
         else:
-            error = "Incorrect password"
+            error = "Invalid password"
             return None, error
     else:
-        error = "User does not exist"
+        error = "Invalid username"
         return None, error
 
 def add_user(uName, uPassword):
     db = get_db()
     pwHash = bcrypt.generate_password_hash(uPassword)
     db.execute('insert into users (username, password) values (?, ?)',
-               [request.form['username'], pwHash])
+               [uName, pwHash])
     db.commit()
     flash('New user was successfully added')
 

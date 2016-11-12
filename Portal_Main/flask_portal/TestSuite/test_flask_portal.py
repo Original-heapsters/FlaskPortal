@@ -72,6 +72,10 @@ def test_add_app_unauth(client):
 
     assert b'401 Unauthorized' in rv.data
 
+def test_register_get(client):
+    rv = client.get("/register_new")
+    assert b'Register a new account!' in rv.data
+
 def test_register_user(client):
     rv = client.post("/register_new",data=dict(
         username='new_test_user',

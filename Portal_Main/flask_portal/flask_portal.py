@@ -1,9 +1,10 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask.ext.bcrypt import Bcrypt
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
@@ -30,12 +31,6 @@ def init_db():
         db.cursor().executescript(f.read())
     db.commit()
 
-# @app.cli.command('initdb')
-# def initdb_command():
-#     """Creates the database tables."""
-#     init_db()
-#     print('Initialized the database.')
-
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -53,7 +48,7 @@ def close_db(error):
 
 @app.route('/')
 def show_apps():
-    init_db()
+    #init_db()
     db = get_db()
     cur = db.execute('select title, link from apps order by id desc')
     apps = cur.fetchall()
@@ -76,12 +71,11 @@ def add_app():
 def login():
     error = None
     if request.method == 'POST':
-        if get_credentials(request.form['username'],request.form['password']):
+        user_login, error = get_credentials(request.form['username'],request.form['password'])
+        if user_login and error is None:
             session['logged_in'] = True
             flash('You were logged in')
             return redirect(url_for('show_apps'))
-        else:
-            error = "Invalid login"
     return render_template('login.html', error=error)
 
 @app.route('/register_new', methods=['GET', 'POST'])
@@ -93,19 +87,27 @@ def register_new():
     return render_template('register_account.html', error=error)
 
 def get_credentials(uName, uPassword):
+    error = None
+    found_user = None
     db = get_db()
     creds = db.execute('select username,password from users where username=?',[uName])
 
     found_user = creds.fetchone()
 
-    if found_user and check_password_hash(found_user["password"], uPassword):
-        return found_user
+    if found_user:
+        print(bcrypt.check_password_hash(found_user["password"], uPassword))
+        if bcrypt.check_password_hash(found_user["password"], uPassword) is True:
+            return found_user, None
+        else:
+            error = "Incorrect password"
+            return None, error
     else:
-        return None
+        error = "User does not exist"
+        return None, error
 
 def add_user(uName, uPassword):
     db = get_db()
-    pwHash = generate_password_hash(uPassword)
+    pwHash = bcrypt.generate_password_hash(uPassword)
     db.execute('insert into users (username, password) values (?, ?)',
                [request.form['username'], pwHash])
     db.commit()

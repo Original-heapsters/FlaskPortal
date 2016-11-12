@@ -36,17 +36,17 @@ def test_empty_db(client):
 
 def test_login_logout(client):
     """Make sure login and logout works"""
-    rv = login(client, flask_portal.app.config['USERNAME'],
-               flask_portal.app.config['PASSWORD'])
+    rv = login(client, 'user',
+               'pass')
     assert b'You were logged in' in rv.data
     rv = logout(client)
     assert b'You were logged out' in rv.data
-    rv = login(client, flask_portal.app.config['USERNAME'] + 'x',
-               flask_portal.app.config['PASSWORD'])
-    assert b'Invalid username' in rv.data
-    rv = login(client, flask_portal.app.config['USERNAME'],
-               flask_portal.app.config['PASSWORD'] + 'x')
-    assert b'Invalid password' in rv.data
+    rv = login(client, 'user' + 'x',
+               'pass')
+    assert b'Invalid login' in rv.data
+    rv = login(client, 'user',
+               'pass' + 'x')
+    assert b'Invalid login' in rv.data
 
 def test_add_app(client):
     login(client, flask_portal.app.config['USERNAME'],
@@ -67,3 +67,11 @@ def test_add_app_unauth(client):
     ), follow_redirects=True)
 
     assert b'401 Unauthorized' in rv.data
+
+def test_register_user(client):
+    rv = client.post("/register_new",data=dict(
+        username='test_user',
+        password='test_password'
+    ), follow_redirects=True)
+
+    assert b'Login' in rv.data

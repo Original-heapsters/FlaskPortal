@@ -52,6 +52,7 @@ def close_db(error):
 
 @app.route('/')
 def show_apps():
+    init_db()
     db = get_db()
     cur = db.execute('select title, link from apps order by id desc')
     apps = cur.fetchall()
@@ -74,6 +75,7 @@ def add_app():
 def login():
     error = None
     if request.method == 'POST':
+        get_credentials(request.form['username'],request.form['password'])
         if request.form['username'] != app.config['USERNAME']:
             error = 'Invalid username'
         elif request.form['password'] != app.config['PASSWORD']:
@@ -84,6 +86,20 @@ def login():
             return redirect(url_for('show_apps'))
     return render_template('login.html', error=error)
 
+def get_credentials(uName, uPassword):
+    db = get_db()
+    creds = db.execute('select username,password from users where username=? and password=?',[uName, uPassword])
+
+    found_user = creds.fetchone()
+
+    if found_user:
+        print("I found " +  found_user["username"])
+        return found_user
+    else:
+        return None
+
+
+
 
 @app.route('/logout')
 def logout():
@@ -91,5 +107,5 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('show_apps'))
 
-# if __name__ == "__main__":
-#    app.run(debug=True, host='0.0.0.0', port=4000)
+if __name__ == "__main__":
+   app.run(debug=True, host='0.0.0.0', port=4000)

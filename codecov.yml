@@ -28,7 +28,7 @@ status:
     project:                   
       default:                 
         enabled: yes           
-        target: auto           
+        target: 50%           
         branches:              
         threshold: 5%        
         if_no_uploads: error   
@@ -41,7 +41,7 @@ status:
                                
       default:
         enabled: yes             
-        target: 80%              
+        target: 20%              
         branches: null          
         threshold: 5%          
         if_no_uploads: error     

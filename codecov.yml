@@ -13,15 +13,11 @@ coverage:
   round: down
   status:
     changes: false
-    patch: true
+    patch: 
       default:
-          enabled: yes             
-          target: 20%              
-          branches: null          
-          threshold: 5%          
-          if_no_uploads: error                   
-          if_not_found: success
-          if_ci_failed: error  
+        enabled: yes
+        target: 20%                    
+        threshold: 5%          
     project: true
 parsers:
   gcov:

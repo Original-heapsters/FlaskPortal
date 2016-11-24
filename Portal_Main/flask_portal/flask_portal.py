@@ -1,6 +1,6 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
-from flask.ext.bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
 app = Flask(__name__)
@@ -12,7 +12,8 @@ app.config.update(dict(
     DEBUG=True,
     SECRET_KEY='development key',
     USERNAME='test_user',
-    PASSWORD='test_password'
+    PASSWORD='test_password',
+    LOGGED_IN_USER='default'
 ))
 
 app.config.from_envvar('FLASK_PORTAL_SETTINGS', silent=True)
@@ -50,20 +51,31 @@ def close_db(error):
 def show_apps():
     #init_db()
     db = get_db()
-    cur = db.execute('select title, link from apps order by id desc')
+    cur = db.execute('select * from apps order by id desc')
     apps = cur.fetchall()
+    cur = db.execute('select * from users order by id desc')
+    user = cur.fetchall()
 
-    return render_template('show_apps.html', apps=apps)
+    return render_template('show_apps.html', apps=apps, userID=app.config["LOGGED_IN_USER"])
 
 @app.route('/add', methods=['POST'])
 def add_app():
     if not session.get('logged_in'):
         abort(401)
-    db = get_db()
-    db.execute('insert into apps (title, link) values (?, ?)',
-               [request.form['title'], request.form['link']])
-    db.commit()
-    flash('New app was successfully posted')
+    if 'Keep me posted!' in request.form['submit']:
+        appID = request.form['app_id']
+        userID = request.form['user_id']
+        subscribe(appID,userID)
+    elif request.form['submit'] == 'DO NOT WANT':
+        appID = request.form['app_id']
+        userID = request.form['user_id']
+        reject(appID,userID)
+    else:
+        db = get_db()
+        db.execute('insert into apps (title, link) values (?, ?)',
+                   [request.form['title'], request.form['link']])
+        db.commit()
+        flash('New app was successfully posted')
     return redirect(url_for('show_apps'))
 
 
@@ -86,17 +98,29 @@ def register_new():
         return redirect(url_for('login'))
     return render_template('register_account.html', error=error)
 
+def subscribe(appID, userID):
+    db = get_db()
+    creds = db.execute('UPDATE users SET subscriptions = ? WHERE users.id = ?', [appID,userID])
+    print("SUBSCRIBED!")
+
+
+def reject(appID,userID):
+    db = get_db()
+    creds = db.execute('UPDATE users SET subscriptions = ? WHERE users.id = ?', [appID, userID])
+    print("UNSUBSCRIBED!")
+
 def get_credentials(uName, uPassword):
     error = None
     found_user = None
     db = get_db()
-    creds = db.execute('select username,password from users where username=?',[uName])
+    creds = db.execute('select id,username,password from users where username=?',[uName])
 
     found_user = creds.fetchone()
 
     if found_user:
         print(bcrypt.check_password_hash(found_user["password"], uPassword))
         if bcrypt.check_password_hash(found_user["password"], uPassword) is True:
+            app.config['LOGGED_IN_USER'] = found_user["id"]
             return found_user, None
         else:
             error = "Invalid password"

@@ -102,13 +102,19 @@ def register_new():
 
 def subscribe(appID, userID):
     db = get_db()
-    creds = db.execute('UPDATE users SET subscriptions = ? WHERE users.id = ?', [appID,userID])
+    print("UPDATE users SET subscriptions = ? WHERE id = ?")
+    print(appID)
+    print(userID)
+    db.execute('UPDATE users SET subscriptions = ? WHERE id = ?', (str(appID),userID))
     print("SUBSCRIBED!")
 
 
 def reject(appID,userID):
     db = get_db()
-    creds = db.execute('UPDATE users SET subscriptions = ? WHERE users.id = ?', [appID, userID])
+    print("UPDATE users SET subscriptions = ? WHERE id = ?")
+    print(appID)
+    print(userID)
+    db.execute('UPDATE users SET rejections = ? WHERE id = ?', (str(appID), userID))
     print("UNSUBSCRIBED!")
 
 def get_credentials(uName, uPassword):

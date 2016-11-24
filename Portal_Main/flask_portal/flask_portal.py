@@ -68,7 +68,7 @@ def add_app():
             appID = request.form['app_id']
             userID = request.form['user_id']
             subscribe(appID,userID)
-        elif request.form['submit'] == 'DO NOT WANT':
+        elif 'DO NOT WANT' in request.form['submit']:
             appID = request.form['app_id']
             userID = request.form['user_id']
             reject(appID,userID)

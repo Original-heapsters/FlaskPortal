@@ -64,6 +64,44 @@ def test_add_app(client):
     assert b'&lt;Hello&gt;' in rv.data
     assert b'http://google.com/' in rv.data
 
+def test_subscribe_to_app(client):
+    login(client, flask_portal.app.config['USERNAME'],
+               flask_portal.app.config['PASSWORD'])
+    client.post('/add', data=dict(
+        title='<Hello>',
+        link='http://google.com/'
+    ), follow_redirects=True)
+    rv = client.post('/add', data=dict(
+        title='<Hello>',
+        link='http://google.com/',
+        submit='Keep me posted!',
+        app_id='1',
+        user_id='1'
+    ), follow_redirects=True)
+
+    assert b'No apps here so far' not in rv.data
+    assert b'&lt;Hello&gt;' in rv.data
+    assert b'http://google.com/' in rv.data
+
+def test_unsub_from_app(client):
+    login(client, flask_portal.app.config['USERNAME'],
+               flask_portal.app.config['PASSWORD'])
+    client.post('/add', data=dict(
+        title='<Hello>',
+        link='http://google.com/'
+    ), follow_redirects=True)
+    rv = client.post('/add', data=dict(
+        title='<Hello>',
+        link='http://google.com/',
+        submit='DO NOT WANT',
+        app_id='1',
+        user_id='1'
+    ), follow_redirects=True)
+
+    assert b'No apps here so far' not in rv.data
+    assert b'&lt;Hello&gt;' in rv.data
+    assert b'http://google.com/' in rv.data
+
 def test_add_app_unauth(client):
     rv = client.post('/add', data=dict(
         title='<Hello>',

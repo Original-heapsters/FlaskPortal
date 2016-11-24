@@ -13,7 +13,24 @@
   {% endif %}
   <ul class="apps">
   {% for app in apps %}
-    <li><h2>{{ app.title }}</h2>{{ app.link|safe }}</li>
+      <div class="w3-card-8 w3-light-grey">
+        <div class="w3-container w3-center">
+          <h2>{{ app.title }}</h2>
+
+          <div class="w3-card-12" >
+            <img src="static/Assets/img_fjords.jpg" alt="Norway" style="width:100%">
+            <div class="w3-container w3-center">
+              <p>{{ app.link|safe }}</p>
+                <form action="{{ url_for('add_app') }}" method="post" class="add-app">
+                    <input type="hidden" value="{{ app.id }}" name="app_id" />
+                    <input type="hidden" value="{{ userID }}" name="user_id" />
+                    <input class="w3-btn w3-green" name="submit" type="submit" value="Keep me posted!">
+                    <input class="w3-btn w3-red" name="submit" type="submit" value="DO NOT WANT">
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
   {% else %}
     <li><em>Unbelievable.  No apps here so far</em></li>
   {% endfor %}

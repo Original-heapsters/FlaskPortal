@@ -62,14 +62,16 @@ def show_apps():
 def add_app():
     if not session.get('logged_in'):
         abort(401)
-    if 'Keep me posted!' in request.form['submit']:
-        appID = request.form['app_id']
-        userID = request.form['user_id']
-        subscribe(appID,userID)
-    elif request.form['submit'] == 'DO NOT WANT':
-        appID = request.form['app_id']
-        userID = request.form['user_id']
-        reject(appID,userID)
+
+    if 'submit' in request.form:
+        if 'Keep me posted!' in request.form['submit']:
+            appID = request.form['app_id']
+            userID = request.form['user_id']
+            subscribe(appID,userID)
+        elif request.form['submit'] == 'DO NOT WANT':
+            appID = request.form['app_id']
+            userID = request.form['user_id']
+            reject(appID,userID)
     else:
         db = get_db()
         db.execute('insert into apps (title, link) values (?, ?)',
